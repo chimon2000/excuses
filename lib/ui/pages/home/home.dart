@@ -1,9 +1,10 @@
 import 'dart:math';
 
-import 'package:excuses/services/excuse.dart';
 import 'package:excuses/models/models.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
+import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -13,52 +14,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Excuse> excuses;
-  ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
-
-  _getExcuses() async {
-    var fetchedExcuses = await excuseService.fetchExcuses();
-
-    setState(() {
-      this.excuses = fetchedExcuses;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
 
-    _getExcuses();
+    Future.microtask(() {
+      var homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
+      homeViewmodel.getExcuses();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (excuses == null)
-      return Material(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    var excuseState = Provider.of<RemoteState<List<Excuse>>>(context);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: ExcusePageView(
-            excuses: excuses,
-            currentPage: currentPage,
+    return excuseState?.when(
+          success: (excuses) => Scaffold(
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ExcusePageView(
+                  excuses: excuses,
+                  currentPage: currentPage,
+                ),
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.arrow_forward),
+              onPressed: () {
+                setState(() {
+                  currentPage = Random().nextInt(excuses.length);
+                });
+              },
+            ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.arrow_forward),
-        onPressed: () {
-          setState(() {
-            currentPage = Random().nextInt(excuses.length);
-          });
-        },
-      ),
-    );
+          loading: () => Material(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          empty: () => Center(
+            child: Text('No results!!!'),
+          ),
+          error: (_) => Center(
+            child: Text('Something went horribly wrong!'),
+          ),
+        ) ??
+        Container();
   }
 }
