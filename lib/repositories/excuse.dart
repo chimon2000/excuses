@@ -20,6 +20,6 @@ class ExcuseRepository {
   }
 
   RemoteState<T> _mapError<T>(error) {
-    return RemoteState.error();
+    return RemoteState.failure();
   }
 }

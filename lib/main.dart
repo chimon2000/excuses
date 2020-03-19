@@ -17,6 +17,10 @@ class ExcusesApp extends StatelessWidget {
             return StreamProvider<RemoteState<List<Excuse>>>.value(
               value: vm.excusesStream$,
               child: child,
+              initialData: RemoteState.initial(),
+              catchError: (context, error) {
+                return RemoteState.failure();
+              },
             );
           },
         )

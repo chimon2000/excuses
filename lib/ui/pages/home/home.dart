@@ -30,38 +30,33 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var excuseState = Provider.of<RemoteState<List<Excuse>>>(context);
 
-    return excuseState?.when(
-          success: (excuses) => Scaffold(
-            body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: ExcusePageView(
-                  excuses: excuses,
-                  currentPage: currentPage,
-                ),
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.arrow_forward),
-              onPressed: () {
-                setState(() {
-                  currentPage = Random().nextInt(excuses.length);
-                });
-              },
+    return excuseState.maybeWhen(
+      success: (excuses) => Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: ExcusePageView(
+              excuses: excuses,
+              currentPage: currentPage,
             ),
           ),
-          loading: () => Material(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          empty: () => Center(
-            child: Text('No results!!!'),
-          ),
-          error: (_) => Center(
-            child: Text('Something went horribly wrong!'),
-          ),
-        ) ??
-        Container();
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.arrow_forward),
+          onPressed: () {
+            setState(() {
+              currentPage = Random().nextInt(excuses.length);
+            });
+          },
+        ),
+      ),
+      empty: () => Center(child: Text('No results!!!')),
+      failure: (_) => Center(child: Text('Something went horribly wrong!!!')),
+      orElse: () => Material(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 }
