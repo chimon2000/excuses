@@ -3,6 +3,7 @@ import 'package:excuses/ui/pages/pages.dart';
 import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:remote_state/remote_state.dart';
 
 void main() => runApp(ExcusesApp());
 
@@ -19,7 +20,7 @@ class ExcusesApp extends StatelessWidget {
               child: child,
               initialData: RemoteState.initial(),
               catchError: (context, error) {
-                return RemoteState.failure();
+                return RemoteState.error();
               },
             );
           },

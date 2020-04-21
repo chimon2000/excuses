@@ -1,5 +1,6 @@
 import 'package:excuses/models/models.dart';
 import 'package:excuses/services/excuse.dart';
+import 'package:remote_state/remote_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ExcuseRepository {
@@ -20,6 +21,6 @@ class ExcuseRepository {
   }
 
   RemoteState<T> _mapError<T>(error) {
-    return RemoteState.failure();
+    return RemoteState.error();
   }
 }

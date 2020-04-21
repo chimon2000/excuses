@@ -5,6 +5,7 @@ import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:remote_state/remote_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       empty: () => Center(child: Text('No results!!!')),
-      failure: (_) => Center(child: Text('Something went horribly wrong!!!')),
+      error: (_) => Center(child: Text('Something went horribly wrong!!!')),
       orElse: () => Material(
         child: Center(
           child: CircularProgressIndicator(),
