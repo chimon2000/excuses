@@ -17,6 +17,12 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  bloc: ^6.0.0-dev.1
+  flutter_bloc: ^6.0.0-dev.1
+  remote_state: ^1.4.0
+  rxdart:
+  provider:
+  freezed_annotation:
   dio: ^3.0.9
   animations: 
   flutter:
