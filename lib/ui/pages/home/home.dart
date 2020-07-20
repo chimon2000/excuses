@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:excuses/cubits/home.dart';
 import 'package:excuses/models/models.dart';
+import 'package:excuses/services/excuse.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,14 +19,6 @@ class _HomePageState extends State<HomePage> {
   List<Excuse> excuses;
   ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
-
-  _getExcuses() async {
-    var fetchedExcuses = await excuseService.fetchExcuses();
-
-    setState(() {
-      this.excuses = fetchedExcuses;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
