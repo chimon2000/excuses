@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:excuses/cubits/home.dart';
+import 'package:excuses/blocs/blocs.dart';
+import 'package:excuses/commands/get_excuses.command.dart';
 import 'package:excuses/models/models.dart';
 import 'package:excuses/services/excuse.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
@@ -19,6 +20,12 @@ class _HomePageState extends State<HomePage> {
   List<Excuse> excuses;
   ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
+
+  @override
+  void initState() {
+    GetExcusesCommand(context).run();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

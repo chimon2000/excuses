@@ -1,4 +1,5 @@
-import 'package:excuses/cubits/home.dart';
+import 'package:excuses/blocs/blocs.dart';
+import 'package:excuses/repositories/excuse.dart';
 import 'package:excuses/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,9 +12,9 @@ class ExcusesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        BlocProvider(
-          create: (_) => HomeCubit(),
-        ),
+        BlocProvider(create: (_) => HomeCubit()),
+        Provider(create: (context) => ExcuseRepository()),
+        Provider(create: (c) => c)
       ],
       child: MaterialApp(
         title: 'Excuses',
