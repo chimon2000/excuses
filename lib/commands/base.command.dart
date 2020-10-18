@@ -11,7 +11,7 @@ abstract class BaseCommand<T> {
     _lastKnownRoot = _context;
   }
 
-  T locate<T>() => _context.read();
+  D locate<D>() => _context.read();
 
   static BuildContext _lastKnownRoot;
 
@@ -19,7 +19,7 @@ abstract class BaseCommand<T> {
   Future<T> undo() => notImplemented();
   Future<T> redo() => notImplemented();
 
-  notImplemented() {
+  Future<T> notImplemented() {
     print("Cannot undo a $runtimeType operation");
 
     return Future.value();
