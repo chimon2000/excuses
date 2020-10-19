@@ -22,9 +22,11 @@ dependencies:
   remote_state: ^1.4.0
   rxdart:
   provider:
+  get_it:
+  get_it_mixin:
   freezed_annotation:
   dio: ^3.0.9
-  animations: 
+  animations: ^1.1.2
   flutter:
     sdk: flutter
 
