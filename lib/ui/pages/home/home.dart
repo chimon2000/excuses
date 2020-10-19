@@ -6,56 +6,64 @@ import 'package:excuses/models/models.dart';
 import 'package:excuses/services/excuse.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remote_state/remote_state.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with GetItStateMixin {
   List<Excuse> excuses;
   ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
 
   @override
   void initState() {
-    GetExcusesCommand(context).run();
+    GetExcusesCommand().run();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, RemoteState<List<Excuse>>>(
-      builder: (context, excuseState) => excuseState.maybeWhen(
-        success: (excuses) => Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: ExcusePageView(
-                excuses: excuses,
-                currentPage: currentPage,
-              ),
+    final homeCubit =
+        watchStream((HomeCubit x) => x, RemoteState<List<Excuse>>.loading());
+
+    registerStreamHandler(
+        (HomeCubit x) => x,
+        (context, AsyncSnapshot<RemoteState<List<Excuse>>> snap, _) =>
+            print(snap.data.isSuccess),
+        initialValue: RemoteState<List<Excuse>>.loading());
+
+    if (!homeCubit.hasData) return Container();
+
+    return homeCubit.data.maybeWhen(
+      success: (excuses) => Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: ExcusePageView(
+              excuses: excuses,
+              currentPage: currentPage,
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.arrow_forward),
-            onPressed: () {
-              setState(() {
-                currentPage = Random().nextInt(excuses.length);
-              });
-            },
-          ),
         ),
-        error: (_, __) =>
-            Center(child: Text('Something went horribly wrong!!!')),
-        orElse: () => Material(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.arrow_forward),
+          onPressed: () {
+            setState(() {
+              currentPage = Random().nextInt(excuses.length);
+            });
+          },
+        ),
+      ),
+      error: (_, __) => Center(child: Text('Something went horribly wrong!!!')),
+      orElse: () => Material(
+        child: Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
