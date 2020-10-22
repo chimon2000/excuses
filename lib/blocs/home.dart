@@ -9,10 +9,4 @@ class HomeCubit extends Cubit<RemoteState<List<Excuse>>> {
   HomeCubit() : super(RemoteState.loading());
 
   void update(RemoteState<List<Excuse>> excuses) => emit(excuses);
-
-  Future<void> getExcuses() async {
-    var excuses = await excuseRepository.getExcuses();
-
-    emit(excuses);
-  }
 }
