@@ -6,14 +6,14 @@ import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Excuse> excuses;
+  List<Excuse>? excuses;
   ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
 
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.arrow_forward),
         onPressed: () {
           setState(() {
-            currentPage = Random().nextInt(excuses.length);
+            currentPage = Random().nextInt(excuses!.length);
           });
         },
       ),
