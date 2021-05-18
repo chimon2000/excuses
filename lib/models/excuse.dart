@@ -1,6 +1,6 @@
 class Excuse {
-  final String text;
-  final int id;
+  final String? text;
+  final int? id;
 
   Excuse.fromJson(Map<String, dynamic> json)
       : id = json['id'],

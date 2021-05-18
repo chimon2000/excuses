@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 GetIt getIt = GetIt.instance;
 
 abstract class BaseCommand<T> {
-  D locate<D>() => getIt.get<D>();
+  D locate<D extends Object>() => getIt.get<D>();
 
   Future<T> run();
   Future<T> undo() => notImplemented();

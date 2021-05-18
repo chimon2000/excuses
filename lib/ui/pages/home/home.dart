@@ -10,14 +10,14 @@ import 'package:remote_state/remote_state.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with GetItStateMixin {
-  List<Excuse> excuses;
+  List<Excuse>? excuses;
   ExcuseService excuseService = ExcuseService();
   var currentPage = 0;
 
@@ -29,18 +29,18 @@ class _HomePageState extends State<HomePage> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final homeCubit =
-        watchStream((HomeCubit x) => x, RemoteState<List<Excuse>>.loading());
+    final homeCubit = watchStream(
+        (HomeCubit x) => x.stream, RemoteState<List<Excuse>>.loading());
 
     registerStreamHandler(
-        (HomeCubit x) => x,
+        (HomeCubit x) => x.stream,
         (context, AsyncSnapshot<RemoteState<List<Excuse>>> snap, _) =>
-            print(snap.data.isSuccess),
+            print(snap.data!.isSuccess),
         initialValue: RemoteState<List<Excuse>>.loading());
 
     if (!homeCubit.hasData) return Container();
 
-    return homeCubit.data.maybeWhen(
+    return homeCubit.data!.maybeWhen(
       success: (excuses) => Scaffold(
         body: SafeArea(
           child: Padding(
