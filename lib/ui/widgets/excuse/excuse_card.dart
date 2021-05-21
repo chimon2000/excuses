@@ -13,7 +13,7 @@ class ExcuseCard extends StatelessWidget {
     return Center(
       child: Text(
         excuse!.text!,
-        style: textTheme.display3,
+        style: textTheme.headline2,
       ),
     );
   }
