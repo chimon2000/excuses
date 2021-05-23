@@ -1,11 +1,9 @@
 import 'dart:math';
 
-import 'package:excuses/models/models.dart';
+import 'package:excuses/logic/home.logic.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
-import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:remote_state/remote_state.dart';
 import 'package:routemaster/routemaster.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,14 +23,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     Future.microtask(() {
-      var homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
-      homeViewmodel.getExcuses();
+      var homeLogic = Provider.of<HomeLogic>(context, listen: false);
+      homeLogic.getExcuses();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var excuseState = Provider.of<RemoteState<List<Excuse>>>(context);
+    var excuseState = Provider.of<HomeState>(context);
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       final queryParameters = RouteData.of(context).queryParameters;
@@ -80,7 +78,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   int? get currentExcuse {
-    final excuseState = context.read<RemoteState<List<Excuse>>>();
+    final excuseState = context.read<HomeState>();
     final defaultExcuse = excuseState.maybeWhen(
       success: (excuses) => excuses[randomIndex(excuses.length)],
       orElse: () => null,

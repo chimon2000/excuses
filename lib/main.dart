@@ -1,9 +1,8 @@
-import 'package:excuses/models/models.dart';
 import 'package:excuses/ui/routes.dart';
-import 'package:excuses/viewmodels/home.dart';
+import 'package:excuses/logic/home.logic.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:remote_state/remote_state.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:routemaster/routemaster.dart';
 
 void main() => runApp(const ExcusesApp());
@@ -15,19 +14,7 @@ class ExcusesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider.value(value: HomeViewmodel()),
-        Consumer<HomeViewmodel>(
-          builder: (context, vm, child) {
-            return StreamProvider<RemoteState<List<Excuse>>>.value(
-              value: vm.excusesStream$,
-              child: child,
-              initialData: RemoteState.initial(),
-              catchError: (context, error) {
-                return RemoteState.error();
-              },
-            );
-          },
-        )
+        StateNotifierProvider<HomeLogic, HomeState>.value(value: HomeLogic()),
       ],
       child: MaterialApp.router(
         routerDelegate: RoutemasterDelegate(routesBuilder: (context) => routes),
