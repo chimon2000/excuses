@@ -1,13 +1,16 @@
 import 'package:excuses/models/models.dart';
-import 'package:excuses/ui/pages/pages.dart';
+import 'package:excuses/ui/routes.dart';
 import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_state/remote_state.dart';
+import 'package:routemaster/routemaster.dart';
 
-void main() => runApp(ExcusesApp());
+void main() => runApp(const ExcusesApp());
 
 class ExcusesApp extends StatelessWidget {
+  const ExcusesApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -26,13 +29,12 @@ class ExcusesApp extends StatelessWidget {
           },
         )
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerDelegate: RoutemasterDelegate(routesBuilder: (context) => routes),
+        routeInformationParser: const RoutemasterParser(),
         title: 'Excuses',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-        ),
-        home: Scaffold(
-          body: HomePage(),
         ),
       ),
     );

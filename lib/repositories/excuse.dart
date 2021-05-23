@@ -12,15 +12,10 @@ class ExcuseRepository {
         .asStream()
         .shareReplay(maxSize: 1)
         .map(_mapSuccess)
-        .onErrorReturnWith(_mapError)
         .startWith(RemoteState.loading());
   }
 
   RemoteState<List<Excuse>> _mapSuccess(List<Excuse> data) {
-    return data.isEmpty ? RemoteState.empty() : RemoteState.success(data);
-  }
-
-  RemoteState<T> _mapError<T>(error) {
-    return RemoteState.error();
+    return RemoteState.success(data);
   }
 }

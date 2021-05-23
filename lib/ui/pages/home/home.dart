@@ -6,17 +6,20 @@ import 'package:excuses/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_state/remote_state.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
+
+  static Page<dynamic> route() => const MaterialPage(
+        child: HomePage(),
+      );
 }
 
 class _HomePageState extends State<HomePage> {
-  var currentPage = 0;
-
   @override
   void initState() {
     super.initState();
@@ -31,33 +34,65 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var excuseState = Provider.of<RemoteState<List<Excuse>>>(context);
 
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      final queryParameters = RouteData.of(context).queryParameters;
+
+      if (currentExcuse != null && !queryParameters.containsKey('id')) {
+        excuseState.maybeWhen(
+          success: (excuses) => Routemaster.of(context)
+              .push('', queryParameters: {'id': currentExcuse.toString()}),
+          orElse: () => {},
+        );
+      }
+    });
+
     return excuseState.maybeWhen(
       success: (excuses) => Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: ExcusePageView(
               excuses: excuses,
-              currentPage: currentPage,
+              currentExcuse: currentExcuse,
             ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.arrow_forward),
+          child: const Icon(Icons.arrow_forward),
           onPressed: () {
             setState(() {
-              currentPage = Random().nextInt(excuses.length);
+              final currentPage = randomIndex(excuses.length);
+
+              Routemaster.of(context).push('',
+                  queryParameters: {'id': excuses[currentPage].id.toString()});
             });
           },
         ),
       ),
-      empty: () => Center(child: Text('No results!!!')),
-      error: (_) => Center(child: Text('Something went horribly wrong!!!')),
-      orElse: () => Material(
+      error: (_, __) =>
+          const Center(child: Text('Something went horribly wrong!!!')),
+      orElse: () => const Material(
         child: Center(
           child: CircularProgressIndicator(),
         ),
       ),
     );
   }
+
+  int? get currentExcuse {
+    final excuseState = context.read<RemoteState<List<Excuse>>>();
+    final defaultExcuse = excuseState.maybeWhen(
+      success: (excuses) => excuses[randomIndex(excuses.length)],
+      orElse: () => null,
+    );
+
+    final queryParameters = RouteData.of(context).queryParameters;
+    final id = queryParameters.containsKey('id')
+        ? int.tryParse(queryParameters['id']!)
+        : defaultExcuse?.id;
+
+    return id;
+  }
+
+  int randomIndex(int length) => Random().nextInt(length);
 }
