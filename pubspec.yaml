@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^4.0.0
   equatable: ^2.0.2
+  remote_state: ^2.0.0
   routemaster: ^0.8.1
 
 dev_dependencies:
