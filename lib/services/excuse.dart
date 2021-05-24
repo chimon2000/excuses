@@ -15,8 +15,7 @@ class ExcuseService {
       return excuses;
     } catch (e) {
       print(e);
+      rethrow;
     }
-
-    return [];
   }
 }
