@@ -1,4 +1,4 @@
-import 'package:excuses/blocs/blocs.dart';
+import 'package:excuses/logic/logic.dart';
 import 'package:excuses/repositories/excuse.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -28,5 +28,5 @@ class ExcusesApp extends StatelessWidget {
 
 void register() {
   GetIt.I.registerSingleton<ExcuseRepository>(ExcuseRepository());
-  GetIt.I.registerSingleton<HomeCubit>(HomeCubit());
+  GetIt.I.registerSingleton<HomeLogic>(HomeLogic());
 }

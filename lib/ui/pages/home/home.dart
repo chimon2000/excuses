@@ -1,11 +1,9 @@
 import 'dart:math';
 
-import 'package:excuses/blocs/blocs.dart';
+import 'package:excuses/logic/logic.dart';
 import 'package:excuses/commands/get_excuses.command.dart';
-import 'package:excuses/models/models.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:remote_state/remote_state.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -21,28 +19,31 @@ class HomePage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _HomePageState extends State<HomePage> with GetItStateMixin {
-  List<Excuse>? excuses;
-
   @override
   void initState() {
-    GetExcusesCommand().run();
     super.initState();
+    GetExcusesCommand().run();
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeCubit = watchStream(
-        (HomeCubit x) => x.stream, RemoteState<List<Excuse>>.loading());
+    final homeLogic = watchX((HomeLogic x) => x);
+    final queryParameters = RouteData.of(context).queryParameters;
 
-    registerStreamHandler(
-        (HomeCubit x) => x.stream,
-        (context, AsyncSnapshot<RemoteState<List<Excuse>>> snap, _) =>
-            print(snap.data!.isSuccess),
-        initialValue: RemoteState<List<Excuse>>.loading());
+    registerHandler(
+      (HomeLogic x) => x,
+      (context, HomeState excuseState, _) {
+        if (currentExcuse != null && !queryParameters.containsKey('id')) {
+          excuseState.maybeWhen(
+            success: (excuses) => Routemaster.of(context)
+                .push('', queryParameters: {'id': currentExcuse.toString()}),
+            orElse: () => {},
+          );
+        }
+      },
+    );
 
-    if (!homeCubit.hasData) return Container();
-
-    return homeCubit.data!.maybeWhen(
+    return homeLogic.maybeWhen(
       success: (excuses) => Scaffold(
         body: SafeArea(
           child: Padding(
@@ -57,10 +58,10 @@ class _HomePageState extends State<HomePage> with GetItStateMixin {
           child: const Icon(Icons.arrow_forward),
           onPressed: () {
             setState(() {
-              final currentPage = randomIndex(excuses!.length);
+              final currentPage = randomIndex(excuses.length);
 
               Routemaster.of(context).push('',
-                  queryParameters: {'id': excuses![currentPage].id.toString()});
+                  queryParameters: {'id': excuses[currentPage].id.toString()});
             });
           },
         ),
@@ -76,10 +77,15 @@ class _HomePageState extends State<HomePage> with GetItStateMixin {
   }
 
   int? get currentExcuse {
+    final excuseState = get<HomeLogic>().value;
+    final defaultExcuse = excuseState.maybeWhen(
+      success: (excuses) => excuses[randomIndex(excuses.length)],
+      orElse: () => null,
+    );
     final queryParameters = RouteData.of(context).queryParameters;
     final id = queryParameters.containsKey('id')
         ? int.tryParse(queryParameters['id']!)
-        : excuses?[0].id;
+        : defaultExcuse?.id;
 
     return id;
   }

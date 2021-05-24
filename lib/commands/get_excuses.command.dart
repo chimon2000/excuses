@@ -1,4 +1,4 @@
-import 'package:excuses/blocs/home.dart';
+import 'package:excuses/logic/logic.dart';
 import 'package:excuses/commands/base.command.dart';
 import 'package:excuses/models/excuse.dart';
 import 'package:excuses/repositories/excuse.dart';
@@ -8,10 +8,10 @@ class GetExcusesCommand extends BaseCommand<RemoteState<List<Excuse>>> {
   @override
   run() async {
     ExcuseRepository excuseRepository = locate();
-    HomeCubit homeBloc = locate();
+    HomeLogic homeLogic = locate();
 
     var excuses = await excuseRepository.getExcuses();
-    homeBloc.update(excuses);
+    homeLogic.update(excuses);
 
     return excuses;
   }
