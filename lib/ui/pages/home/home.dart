@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:excuses/logic/home.logic.dart';
+import 'package:excuses/ui/widgets/state_listener.dart';
 import 'package:excuses/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,55 +24,56 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     Future.microtask(() {
-      var homeLogic = Provider.of<HomeLogic>(context, listen: false);
+      var homeLogic = context.read<HomeLogic>();
       homeLogic.getExcuses();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var excuseState = Provider.of<HomeState>(context);
+    var excuseState = context.watch<HomeState>();
+    final queryParameters = RouteData.of(context).queryParameters;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      final queryParameters = RouteData.of(context).queryParameters;
-
-      if (currentExcuse != null && !queryParameters.containsKey('id')) {
-        excuseState.maybeWhen(
-          success: (excuses) => Routemaster.of(context)
-              .push('', queryParameters: {'id': currentExcuse.toString()}),
-          orElse: () => {},
-        );
-      }
-    });
-
-    return excuseState.maybeWhen(
-      success: (excuses) => Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ExcusePageView(
-              excuses: excuses,
-              currentExcuse: currentExcuse,
+    return StateListener<HomeState>(
+      onStateChanged: (context, state) {
+        if (currentExcuse != null && !queryParameters.containsKey('id')) {
+          excuseState.maybeWhen(
+            success: (excuses) => Routemaster.of(context)
+                .push('', queryParameters: {'id': currentExcuse.toString()}),
+            orElse: () => {},
+          );
+        }
+      },
+      child: excuseState.maybeWhen(
+        success: (excuses) => Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ExcusePageView(
+                excuses: excuses,
+                currentExcuse: currentExcuse,
+              ),
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.arrow_forward),
-          onPressed: () {
-            setState(() {
-              final currentPage = randomIndex(excuses.length);
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.arrow_forward),
+            onPressed: () {
+              setState(() {
+                final currentPage = randomIndex(excuses.length);
 
-              Routemaster.of(context).push('',
-                  queryParameters: {'id': excuses[currentPage].id.toString()});
-            });
-          },
+                Routemaster.of(context).push('', queryParameters: {
+                  'id': excuses[currentPage].id.toString()
+                });
+              });
+            },
+          ),
         ),
-      ),
-      error: (_, __) =>
-          const Center(child: Text('Something went horribly wrong!!!')),
-      orElse: () => const Material(
-        child: Center(
-          child: CircularProgressIndicator(),
+        error: (_, __) =>
+            const Center(child: Text('Something went horribly wrong!!!')),
+        orElse: () => const Material(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
