@@ -1,0 +1,14 @@
+name: excuses
+
+packages:
+  - packages/**
+  - apps/**
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+scripts:
+  dev:
+    exec: flutter run -d chrome
+    select-package:
+      file-exists: "lib/main.dart"
