@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 
 import 'package:excuses_data/src/models/models.dart';
 
-class ExcuseService {
+class ExcuseFacade {
   Future<List<Excuse>> fetchExcuses() async {
     try {
       Response response = await Dio().get(

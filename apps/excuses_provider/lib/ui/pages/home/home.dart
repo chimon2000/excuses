@@ -23,12 +23,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  ExcuseService excuseService = ExcuseService();
-
   @override
   Widget build(BuildContext context) {
     return FutureProvider<Resource<List<Excuse>>>(
-      create: (context) => excuseService
+      create: (context) => context
+          .read<ExcuseFacade>()
           .fetchExcuses()
           .then((value) => Resource.success(data: value))
           .catchError((err) => Resource<List<Excuse>>.error(msg: '$err')),

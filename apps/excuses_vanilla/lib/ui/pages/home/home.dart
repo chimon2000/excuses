@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Excuse>? excuses;
-  ExcuseService excuseService = ExcuseService();
+  ExcuseFacade excuseService = ExcuseFacade();
 
   _getExcuses() async {
     var fetchedExcuses = await excuseService.fetchExcuses();
