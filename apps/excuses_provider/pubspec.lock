@@ -2,12 +2,12 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   animations:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: animations
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   async:
     dependency: transitive
     description:
@@ -58,12 +58,12 @@ packages:
     source: hosted
     version: "4.0.6"
   equatable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.5"
   excuses_data:
     dependency: "direct main"
     description:
@@ -114,6 +114,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.3"
+  gap:
+    dependency: "direct main"
+    description:
+      name: gap
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   http_parser:
     dependency: transitive
     description:
@@ -163,6 +170,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -170,6 +184,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.3"
   remote_state:
     dependency: "direct main"
     description:
@@ -183,7 +204,14 @@ packages:
       name: routemaster
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.1"
+    version: "1.0.1"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
