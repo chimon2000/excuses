@@ -19,4 +19,9 @@ class ExcuseFacade {
       rethrow;
     }
   }
+
+  /// TODO: Not actually implemented.
+  Future<bool> toggleFavorite(int id) async {
+    return true;
+  }
 }

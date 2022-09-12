@@ -1,0 +1,33 @@
+name: excuses_riverpod
+description: A Flutter application that displays excuses to WFH.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  animations: ^2.0.4
+  cupertino_icons: ^1.0.2
+  equatable: ^2.0.3
+  excuses_data:
+    path: ../../packages/excuses_data
+  excuses_design:
+    path: ../../packages/excuses_design
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.0.0-dev.9
+  gap: ^2.0.0
+  riverpod: ^2.0.0-dev.9
+
+  routemaster: ^1.0.1
+  shimmer: ^2.0.0
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
