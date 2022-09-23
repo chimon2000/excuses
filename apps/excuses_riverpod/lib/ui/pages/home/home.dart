@@ -45,10 +45,11 @@ class HomePage extends ConsumerWidget {
                   child: ExcusesPageTransitionSwitcher(
                     child: excuses$.when(
                       data: (excuses) => AnimatedOpacity(
-                          duration: const Duration(milliseconds: 350),
-                          curve: Curves.decelerate,
-                          opacity: excuses$.isRefreshing ? .5 : 1,
-                          child: ExcusesDataView(excuses: excuses)),
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.decelerate,
+                        opacity: excuses$.isRefreshing ? .5 : 1,
+                        child: ExcusesDataView(excuses: excuses),
+                      ),
                       error: (_, __) => const ExcuseErrorView(),
                       loading: () => const ExcuseSkeletonView(),
                     ),
